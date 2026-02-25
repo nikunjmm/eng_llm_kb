@@ -61,6 +61,7 @@ __pycache__/
 # Docker
 .docker-data/
 docker-compose.override.yml
+docker/**/data/
 
 # PNPM
 .pnpm-debug.log
