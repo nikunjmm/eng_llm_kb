@@ -2,12 +2,13 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+
+load_dotenv()
+
 from api.routes import chat
 from langfuse.openai import openai # (If we used openai plugin instead of raw API but for gemini we just observe globally via wrapper)
 # We will use the Langfuse SDK for custom trace creation instead of the monkeypatch since we are on Gemini
 from langfuse import observe
-
-load_dotenv()
 
 app = FastAPI(
     title="Engineering LLM KB Engine",
