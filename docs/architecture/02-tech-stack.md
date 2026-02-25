@@ -17,11 +17,13 @@ The central server handles natural language processing, RAG orchestration, and L
 
 *   **API Framework:** FastAPI (Python)
     *   *Purpose:* High-performance REST/WebSocket gateway to receive context/prompts from the client.
-*   **AI Orchestration Framework:** LangChain or LlamaIndex (Python)
-    *   *Purpose:* Manages the Agent loops, RAG retrieval logic, Context analyzing, and Tool dispatching.
-*   **Large Language Model (MVP):** OpenAI API or Google Gemini API
-    *   *Purpose:* The reasoning engine. (Architecture ensures easy swapping to vLLM/Ollama for fully private local hosting in the future).
-*   **Embedding Model:** `text-embedding-3-small` (or equivalent, swappable later)
+*   **AI Orchestration Framework:** Raw SDK Calls + Pydantic (Python)
+    *   *Purpose:* Manages the Agent loops, RAG retrieval logic, Context analyzing, and Tool dispatching without the overhead of heavy frameworks like LangChain. Ensures full control over prompts and tool schemas.
+*   **Large Language Model (MVP):** Google Gemini API
+    *   *Purpose:* The reasoning engine using raw `google-generativeai` SDK. (Architecture ensures easy swapping to vLLM/Ollama for fully private local hosting in the future).
+*   **Embedding Model:** `text-embedding-004` (Google's multimodal embedding model, or equivalent, swappable later)
+*   **LLM Observability:** Langfuse
+    *   *Purpose:* Fully open-source, self-hosted platform for tracing LLM executions, managing prompts, and monitoring agent iterations without cloud dependency.
 
 ## 3. Domain Knowledge Base (Storage & Ingestion)
 Responsible for ingesting, parsing, and searching complex manufacturing domain knowledge.
@@ -34,5 +36,5 @@ Responsible for ingesting, parsing, and searching complex manufacturing domain k
     *   *Purpose:* A local, open-source S3-compatible object storage service. Used to store images extracted from PDFs by Docling, keeping the Vector DB lightweight.
 
 ## 4. Development & Deployment
-*   **Containerization:** Docker & Docker Compose (for Qdrant, MinIO, and potentially the FastAPI server)
+*   **Containerization:** Docker & Docker Compose (for Qdrant, MinIO, Langfuse, and FastAPI)
 *   **Version Control:** Git

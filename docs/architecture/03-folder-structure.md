@@ -27,7 +27,7 @@ eng_llm_kb/
 │   │
 │   ├── server/                         # Central Python Orchestration Server
 │   │   ├── api/                        # FastAPI routers and endpoints
-│   │   ├── agents/                     # LangChain/LlamaIndex agent definitions and prompts
+│   │   ├── agents/                     # Agent reasoning, state management, and prompts
 │   │   ├── tools/                      # Tool definitions mapped to C# DLL actions
 │   │   └── rag/                        # Retrieval logic (querying Qdrant)
 │   │
@@ -36,13 +36,10 @@ eng_llm_kb/
 │       ├── chunking/                   # Text chunking and embedding logic
 │       └── storage/                    # Interfaces for Qdrant and MinIO
 │
-├── data/                               # Local storage for Raw and Processed data (Ignored in Git)
-│   ├── raw_documents/                  # Source PDFs and SOPs for ingestion
-│   └── processed/                      # Intermediate structures (e.g. extracted images before MinIO)
-│
 ├── docker/                             # Infrastructure definitions
 │   ├── minio/                          # Docker configuration for MinIO
 │   ├── qdrant/                         # Docker configuration for Qdrant setup
+│   ├── langfuse/                       # Docker configuration for Langfuse telemetry
 │   └── docker-compose.yml              # Combined infrastructure runner
 │
 └── .gitignore                          # Standard git ignores (excluding /data, /docker volumes)

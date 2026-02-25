@@ -21,10 +21,10 @@ An enterprise-grade, open-source Agentic RAG framework designed for a C# desktop
 
 ### 2. Central API & Orchestrator
 - **Gateway**: FastAPI (Python) exposing REST endpoints (e.g., `/api/v1/chat`).
-- **Orchestrator**: LangChain or LlamaIndex.
+- **Orchestrator**: Custom Agent Loop (Raw SDKs + Pydantic).
   - **Context Analyzer**: Evaluates the incoming C# context.
   - **Retrieval Engine (RAG)**: Queries the Vector DB for domain knowledge.
-  - **Agent Loop**: Uses the LLM to reason about the prompt, context, and RAG data.
+  - **Agent Loop**: Uses the LLM to reason about the prompt, context, and RAG data with full transparency and control.
 - **Tool Definitions**: Registered tools mapped to C# DLL functions. The LLM outputs structured JSON commands (e.g., `{"action": "SetPressure", "parameters": {"value": 50}}`).
 
 ### 3. Domain Knowledge Base (Manufacturing Data)
