@@ -20,20 +20,22 @@ An enterprise-grade, open-source Agentic RAG framework designed for a C# desktop
   - **Action Executor**: Receives JSON action commands from the Python Server (upon user approval) and executes native C# functions (e.g., `SelectEquipment(id="PUMP-101")`).
 
 ### 2. Central API & Orchestrator
-- **Gateway**: FastAPI (Python) exposing REST endpoints (e.g., `/api/v1/chat`).
+- **Gateway**: FastAPI (Python) exposing REST endpoints (e.g., `/api/v1/chat`) and Streaming Interfaces (via Server-Sent Events or WebSockets) for real-time conversational experiences.
 - **Orchestrator**: Custom Agent Loop (Raw SDKs + Pydantic).
   - **Context Analyzer**: Evaluates the incoming C# context.
-  - **Retrieval Engine (RAG)**: Queries the Vector DB for domain knowledge.
-  - **Agent Loop**: Uses the LLM to reason about the prompt, context, and RAG data with full transparency and control.
+  - **Retrieval Engine (RAG)**: Queries the Vector DB using hybrid search (combining vector similarity with keyword search) and applies a reranking stage for optimal context retrieval.
+  - **Agent Loop & Sub-agents**: Uses the LLM to reason about the prompt, context, and RAG data. The main agent can dispatch tasks to specialized, context-isolated sub-agents.
+  - **Chat & Memory Manager**: Persists conversation threads, user interactions, and memory state to a relational database.
 - **Tool Definitions**: Registered tools mapped to C# DLL functions. The LLM outputs structured JSON commands (e.g., `{"action": "SetPressure", "parameters": {"value": 50}}`).
 
 ### 3. Domain Knowledge Base (Manufacturing Data)
-- **Vector Database**: Qdrant (Open Source, local Docker deployment).
+- **Database & Vector Store**: PostgreSQL + pgvector (Open Source, local Docker deployment). Handles both relational data (chat history, user threads) and vector embeddings, simplifying the tech stack.
 - **Ingestion Pipeline**: 
-  - **Document Parsing**: Uses `Docling` to extract text and complex tables from manufacturing PDFs, converting them to Markdown format.
-  - **Image Extraction**: Images are extracted from PDFs, saved to **MinIO** (a local S3-compatible object store), and referenced via standard markdown image links pointing to the local MinIO bucket.
-  - **Embedding & Chunking**: Markdown text is chunked and embedded using an Embedding API (e.g., `text-embedding-3-small` for MVP, later local HuggingFace) before insertion into Qdrant.
-  - **Metadata**: Chunks are tagged with metadata (e.g., equipment ID, document type) for hybrid search capabilities.
+  - **Document Parsing**: Uses `Docling` to extract text and complex tables from multi-format manufacturing documents (PDF, DOCX, XLSX/Excel, HTML). Converts them to Markdown format.
+  - **Image Extraction**: Images are extracted from documents, saved to **MinIO** (a local S3-compatible object store), and referenced via standard markdown image links pointing to the local MinIO bucket.
+  - **Embedding & Chunking**: Markdown text is chunked, structured metadata is extracted, and the text is embedded using an Embedding API (e.g., `text-embedding-3-small` for MVP, later local HuggingFace) before insertion into PostgreSQL.
+  - **Record Management**: Ingestion logic leverages document hashes to automatically handle deduplication.
+  - **Search Configuration**: Chunks are stored alongside rich metadata (e.g., equipment ID, document type) to feed hybrid search and reranking workloads.
 
 ## Decision Log
 
@@ -72,5 +74,6 @@ An enterprise-grade, open-source Agentic RAG framework designed for a C# desktop
 ## Implementation Handoff Readiness
 The architecture is fully defined and validated against the non-functional requirements. The project can now proceed to implementation, starting with:
 1. Setting up the C# WebView2 + React UI scaffolding.
-2. Building the FastAPI Python Server skeleton.
-3. Establishing the Docling + MinIO + Qdrant data ingestion pipeline.
+2. Building the FastAPI Python Server skeleton with streaming endpoints.
+3. Establishing the PostgreSQL/pgvector database for memory and vector storage.
+4. Implementing the multi-format Docling parsing + MinIO ingestion pipeline.
