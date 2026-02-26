@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   langfuse:
-    image: langfuse/langfuse:latest
+    image: langfuse/langfuse:2
     container_name: eng_rag_langfuse
     depends_on:
       - postgres-db
